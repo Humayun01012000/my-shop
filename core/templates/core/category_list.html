@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <!-- Category Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="display-6">{{ category.name }}</h2>
+            <p class="text-muted">{{ products.count }} products available</p>
+            <hr>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for product in products %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <a href="{{ product.get_absolute_url }}">
+                    <img src="{{ product.image.url }}" 
+                         class="card-img-top" 
+                         alt="{{ product.name }}"
+                         style="height: 300px; object-fit: contain;">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{{ product.get_absolute_url }}" 
+                           class="text-decoration-none text-dark">
+                            {{ product.name }}
+                        </a>
+                    </h5>
+                    <p class="card-text text-success">${{ product.price }}</p>
+                    <small class="text-muted">
+                        Category: 
+                        <a href="{{ product.category.get_absolute_url }}" 
+                           class="text-decoration-none">
+                            {{ product.category.name }}
+                        </a>
+                    </small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
