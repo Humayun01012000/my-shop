@@ -1,36 +1,52 @@
+
 {% extends 'base.html' %}
+
+
 {% block content %}
-<div class="container mt-5">
-    <h2>Search Results for "{{ query }}"</h2>
-    <div class="row mt-4">
-        {% if results %}
-            {% for product in results %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 shadow">
-                    <a href="{{ product.get_absolute_url }}">
-                        <img src="{{ product.image.url }}" 
-                             class="card-img-top" 
-                             alt="{{ product.name }}">
-                    </a>
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <a href="{{ product.get_absolute_url }}" 
-                               class="text-decoration-none text-dark">
-                                {{ product.name }}
-                            </a>
-                        </h5>
-                        <p class="card-text text-success">${{ product.price }}</p>
+
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <h5>Filters</h5>
+                <form method="get" action="{% url 'core:search' %}">
+                    <input type="hidden" name="q" value="{{ query }}">
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <select name="category" class="form-select">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                            <option value="{{ category.slug }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                </div>
+                    <div class="mb-3">
+                        <label class="form-label">Price Range</label>
+                        <input type="number" name="min_price" class="form-control mb-2" placeholder="Min Price">
+                        <input type="number" name="max_price" class="form-control" placeholder="Max Price">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                </form>
             </div>
-            {% endfor %}
-        {% else %}
-            <div class="col-12">
-                <div class="alert alert-info">
-                    No products found for "{{ query }}".
-                </div>
-            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <!-- Display results here -->
+        {% if not results and query %}
+        <div class="alert alert-info">
+            <h5>No results found for "{{ query }}"</h5>
+            <p>Try these suggestions:</p>
+            <ul>
+                {% for product in suggestions %}
+                <li>
+                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
         {% endif %}
     </div>
 </div>
+
 {% endblock %}

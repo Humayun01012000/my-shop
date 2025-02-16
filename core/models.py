@@ -24,4 +24,12 @@ class Product(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('core:product_detail', args=[self.slug])
+        return reverse('core:product_detail', args=[self.slug]) 
+    
+
+class PopularSearch(models.Model):
+    query = models.CharField(max_length=255, unique=True)
+    count = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return self.query
