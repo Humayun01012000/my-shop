@@ -19,4 +19,21 @@ def category_list(request, slug):
     return render(request, 'core/category_list.html', {
         'category': category,
         'products': products
+    }) 
+
+
+from django.shortcuts import render
+from django.db.models import Q
+from .models import Product
+
+def search(request):
+    query = request.GET.get('q')
+    results = Product.objects.filter(
+        Q(name__icontains=query) | 
+        Q(description__icontains=query)
+    ) if query else []
+    
+    return render(request, 'core/search_results.html', {
+        'results': results,
+        'query': query
     })
